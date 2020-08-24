@@ -14,4 +14,28 @@ module.exports = {
           })
           .catch((err) => res.send(err));
   },
+
+  // find the workout by its ID to access the exercises array
+  addExercise: async (req, res) => {
+    try {
+      // set a variable to easily access the current workout
+      const workout = await db.Workout.findById(req.params.id);
+      //push new exercise to the workout.exercises array
+      workout.exercises.push(req.body);
+      // forEach loop accesses the duration of each exercise and adds them up
+      let totalDuration = 0;
+      await workout.exercises.forEach((exercise) => {
+        totalDuration += exercise.duration;
+      });
+
+      // assign the variable to the object key's value
+      workout.totalDuration = totalDuration;
+      //save the workout with the newly added exercis
+      await workout.save();
+      //send response so the request does not hang up
+      res.send(workout);
+    } catch (err) {
+      res.send(err);
+    }
+  },
 };
