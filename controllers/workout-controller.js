@@ -15,6 +15,17 @@ module.exports = {
           .catch((err) => res.send(err));
   },
 
+  //create new workout to be added to db
+  newWorkout: (req, res) => {
+    db.Workout.create(req.body)
+      .then((workout) => {
+        res.send(workout);
+      })
+      .catch((err) => {
+        res.json(err);
+      });
+  },
+
   // find the workout by its ID to access the exercises array
   addExercise: async (req, res) => {
     try {
@@ -38,4 +49,9 @@ module.exports = {
       res.send(err);
     }
   },
+
+  deleteWorkout: (req, res) =>
+    db.Workout.findByIdAndDelete(req.query.id)
+      .then(() => res.send({ msg: "Deleted workout" }))
+      .catch((err) => res.send(err)),
 };
